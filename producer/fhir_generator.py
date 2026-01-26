@@ -1,16 +1,13 @@
-# ============================================================
-# FICHIER : fhir_generator.py
-# RÔLE    : Génération de données de pression artérielle
-# FORMAT  : FHIR (Observation)
-#
-# Ce script simule des mesures médicales réelles
+
+# fichier : fhir_generator.py
+# role  : Génération de données de pression artérielle
+# format  : FHIR (Observation)
+# Le but de notre script est de simuler des mesures médicales réelles
 # et constitue l'entrée du pipeline Kafka
-# ============================================================
 
 
-# =========================
-# IMPORTS PYTHON
-# =========================
+
+# Les impots Pythons
 
 # json : pour afficher les données proprement en JSON
 import json
@@ -28,20 +25,16 @@ from faker import Faker
 from fhir.resources.observation import Observation
 
 
-# =========================
-# INITIALISATION DES OUTILS
-# =========================
+# intialisation des outils clés
 
-# Initialisation de Faker
+# on initialises Faker
 # Il permet de générer des identifiants patients réalistes
 fake = Faker()
 
-# =========================
-# PARAMÈTRES MÉDICAUX
-# =========================
+# Les paramètre médicaux
 
-# Seuils réalistes de pression artérielle systolique
-# (valeurs larges volontairement pour inclure cas normaux + anormaux)
+# Seuils réaliste de pression artérielle systolique
+# (On choisit des valeurs large volontairement pour inclure des cas normaux + anormaux)
 SYSTOLIC_MIN = 80
 SYSTOLIC_MAX = 180
 
@@ -50,47 +43,45 @@ DIASTOLIC_MIN = 50
 DIASTOLIC_MAX = 120
 
 
-# =========================
-# FONCTION PRINCIPALE
-# =========================
+#Fonction principale 
 
 def generate_blood_pressure_observation():
     """
     Cette fonction génère UNE observation médicale
     de pression artérielle au format FHIR.
 
-    Elle ne fait AUCUNE analyse :
-    - pas de détection d’anomalie
+    Elle ne fait aucune analyse, dans le sens où  :
+    - il n'y aura pas de détection d’anomalie
     - pas de logique métier
-    - uniquement de la génération de données
+    - mais uniquement de la génération de données
     """
 
-    # -------------------------
+
     # Génération d'un identifiant patient unique
-    # -------------------------
+    
     # Exemple : PAT-4832
     patient_id = f"PAT-{fake.random_int(min=1000, max=9999)}"
 
-    # -------------------------
+    
     # Génération des valeurs de pression artérielle
-    # -------------------------
+    
     # systolic = pression systolique (max)
     systolic = random.randint(SYSTOLIC_MIN, SYSTOLIC_MAX)
 
     # diastolic = pression diastolique (min)
     diastolic = random.randint(DIASTOLIC_MIN, DIASTOLIC_MAX)
 
-    # -------------------------
+    
     # Génération du timestamp
-    # -------------------------
+    
     # Format ISO 8601 (standard médical et informatique)
     from datetime import timezone
     timestamp = datetime.now(timezone.utc).isoformat()
 
 
-    # -------------------------
+
     # Construction de l'objet FHIR Observation
-    # -------------------------
+   
     # On respecte strictement le standard FHIR
     observation = Observation(
 
@@ -129,15 +120,15 @@ def generate_blood_pressure_observation():
         # Date et heure de la mesure
         effectiveDateTime=timestamp,
 
-        # -------------------------
-        # Composants de la mesure
-        # -------------------------
+        
+        # les composant de la mesure
+        
         # La pression artérielle contient DEUX valeurs :
         # - systolique
         # - diastolique
         component=[
 
-            # --- Pression systolique ---
+            # Pression systolique 
             {
                 "code": {
                     "coding": [
@@ -156,7 +147,7 @@ def generate_blood_pressure_observation():
                 }
             },
 
-            # --- Pression diastolique ---
+            # Pression diastolique
             {
                 "code": {
                     "coding": [
@@ -178,14 +169,12 @@ def generate_blood_pressure_observation():
     )
 
     # Conversion de l'objet FHIR vers un dictionnaire Python
-    # (prêt à être sérialisé en JSON pour Kafka)
+    # (donc prêt à être sérialisé en JSON pour Kafka)
     return observation.model_dump(mode="json")
 
 
 
-# =========================
-# POINT D'ENTRÉE DU SCRIPT
-# =========================
+# points d'entrée du script: 
 
 # Ce bloc s'exécute uniquement si le fichier est lancé directement
 # Il permet de tester le générateur localement
@@ -197,9 +186,7 @@ if __name__ == "__main__":
     # Affichage du résultat en JSON lisible
     print(json.dumps(observation, indent=2))
 
-# =========================
-# POINT D'ENTRÉE DU SCRIPT
-# =========================
+#Pour plus de lisibilité:
 
 if __name__ == "__main__":
 

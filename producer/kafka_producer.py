@@ -1,19 +1,14 @@
-# ======================================================
-# Kafka Producer – Blood Pressure Observations (FHIR)
-# ======================================================
-# Ce script :
+
+# Kafka Producer 
+
+# le script suivant :
 # 1) Génère une observation de pression artérielle au format FHIR
 # 2) La sérialise en JSON
 # 3) L’envoie vers un topic Kafka
-#
-# Objectif pédagogique :
-# - Comprendre Kafka Producer
-# - Respecter un standard médical (FHIR)
-# - Avoir un code clair, propre, commenté
-# ======================================================
 
 
-# ---------- IMPORTS ----------
+
+# Les importation
 
 # KafkaProducer permet d'envoyer des messages à Kafka
 from kafka import KafkaProducer
@@ -28,7 +23,7 @@ import time
 from producer.fhir_generator import generate_blood_pressure_observation
 
 
-# ---------- PARAMÈTRES CONFIGURABLES ----------
+# Les paramètres configurables
 
 # Adresse du broker Kafka
 # 'localhost:9092' signifie :
@@ -40,8 +35,7 @@ KAFKA_BROKER = "localhost:9092"
 # Tous les messages seront envoyés dans ce topic
 TOPIC_NAME = "blood_pressure_fhir"
 
-
-# ---------- CRÉATION DU PRODUCER ----------
+# La création du producer
 
 # KafkaProducer se charge de la connexion au broker Kafka
 # value_serializer transforme automatiquement nos données en JSON bytes
@@ -51,7 +45,7 @@ producer = KafkaProducer(
 )
 
 
-# ---------- BOUCLE PRINCIPALE ----------
+# Boucle principale
 
 print("Kafka Producer démarré...")
 print(f"Envoi des messages vers le topic : {TOPIC_NAME}")
