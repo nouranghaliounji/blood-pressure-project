@@ -167,7 +167,10 @@ Kibana permet :
 - la visualisation temporelle
 - l’identificationn des situations critiques
 
-![Uploading KIBANA DASHBOARD.jpeg…]()
+![KIBANA DASHBOARD](https://github.com/user-attachments/assets/994504e0-9d54-42c0-864c-69bbeb26ddfb)
+
+
+
 
 ## Infrastructure Docker
 Tous les services sont déployés via Docker :
