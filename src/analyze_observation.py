@@ -1,23 +1,29 @@
 def analyze_blood_pressure(systolic, diastolic):
     """
     Analyse une mesure de pression artérielle
-    et retourne les anomalies détectées.
+    et retourne le type d'anomalie détectée
+    selon les recommandations médicales.
     """
 
-    anomalies = []
+    if systolic is None or diastolic is None:
+        return ["invalid_measurement"]
 
-    # Règles médicales
-    if systolic > 140:
-        anomalies.append("hypertension")
-    if systolic < 90:
-        anomalies.append("hypotension")
 
-    if diastolic > 90:
-        anomalies.append("hypertension")
-    if diastolic < 60:
-        anomalies.append("hypotension")
+    # Hypertensive crisis (urgence)
+    if systolic > 180 or diastolic > 120:
+        return ["hypertensive_crisis"]
 
-    return anomalies
+    # Hypertension Stage 2
+    if systolic >= 140 or diastolic >= 90:
+        return ["hypertension_stage_2"]
+
+    # Hypertension Stage 1
+    if 130 <= systolic <= 139 or 80 <= diastolic <= 89:
+        return ["hypertension_stage_1"]
+
+    # Elevated blood pressure
+    if 120 <= systolic <= 129 and diastolic < 80:
+        return ["elevated"]
 
 
 def extract_bp_from_fhir_observation(observation: dict):

@@ -1,87 +1,45 @@
-
 # fichier : fhir_generator.py
 # role  : Génération de données de pression artérielle
 # format  : FHIR (Observation)
 # Le but de notre script est de simuler des mesures médicales réelles
 # et constitue l'entrée du pipeline Kafka
 
-
-
-# Les impots Pythons
+# Les imports Pythons
 
 # json : pour afficher les données proprement en JSON
 import json
 
-# random : pour générer des valeurs numériques aléatoires
-import random
-
 # datetime : pour gérer les dates/heures au format standard
-from datetime import datetime
-
-# Faker : librairie permettant de simuler des données réalistes
-from faker import Faker
+from datetime import datetime, timezone
 
 # Observation : objet FHIR officiel pour représenter une observation médicale
 from fhir.resources.observation import Observation
 
 
-# intialisation des outils clés
+# Fonction principale
 
-# on initialises Faker
-# Il permet de générer des identifiants patients réalistes
-fake = Faker()
-
-# Les paramètre médicaux
-
-# Seuils réaliste de pression artérielle systolique
-# (On choisit des valeurs large volontairement pour inclure des cas normaux + anormaux)
-SYSTOLIC_MIN = 80
-SYSTOLIC_MAX = 180
-
-# Seuils réalistes de pression artérielle diastolique
-DIASTOLIC_MIN = 50
-DIASTOLIC_MAX = 120
-
-
-#Fonction principale 
-
-def generate_blood_pressure_observation():
+def generate_blood_pressure_observation(patient_id: str, systolic: float, diastolic: float):
     """
     Cette fonction génère UNE observation médicale
     de pression artérielle au format FHIR.
 
-    Elle ne fait aucune analyse, dans le sens où  :
+    Elle ne fait aucune analyse, dans le sens où :
     - il n'y aura pas de détection d’anomalie
     - pas de logique métier
     - mais uniquement de la génération de données
+
+    Ici, on ne génère PAS des valeurs au hasard :
+    - le patient_id et les valeurs systolic/diastolic sont fournis par le producer
+    - cela permet au producer de simuler une évolution réaliste dans le temps
     """
 
-
-    # Génération d'un identifiant patient unique
-    
-    # Exemple : PAT-4832
-    patient_id = f"PAT-{fake.random_int(min=1000, max=9999)}"
-
-    
-    # Génération des valeurs de pression artérielle
-    
-    # systolic = pression systolique (max)
-    systolic = random.randint(SYSTOLIC_MIN, SYSTOLIC_MAX)
-
-    # diastolic = pression diastolique (min)
-    diastolic = random.randint(DIASTOLIC_MIN, DIASTOLIC_MAX)
-
-    
     # Génération du timestamp
-    
+
     # Format ISO 8601 (standard médical et informatique)
-    from datetime import timezone
     timestamp = datetime.now(timezone.utc).isoformat()
 
-
-
     # Construction de l'objet FHIR Observation
-   
+
     # On respecte strictement le standard FHIR
     observation = Observation(
 
@@ -120,15 +78,13 @@ def generate_blood_pressure_observation():
         # Date et heure de la mesure
         effectiveDateTime=timestamp,
 
-        
-        # les composant de la mesure
-        
+        # Les composants de la mesure
         # La pression artérielle contient DEUX valeurs :
         # - systolique
         # - diastolique
         component=[
 
-            # Pression systolique 
+            # Pression systolique
             {
                 "code": {
                     "coding": [
@@ -140,7 +96,7 @@ def generate_blood_pressure_observation():
                     ]
                 },
                 "valueQuantity": {
-                    "value": systolic,
+                    "value": float(systolic),
                     "unit": "mmHg",
                     "system": "http://unitsofmeasure.org",
                     "code": "mm[Hg]"
@@ -159,7 +115,7 @@ def generate_blood_pressure_observation():
                     ]
                 },
                 "valueQuantity": {
-                    "value": diastolic,
+                    "value": float(diastolic),
                     "unit": "mmHg",
                     "system": "http://unitsofmeasure.org",
                     "code": "mm[Hg]"
@@ -173,27 +129,19 @@ def generate_blood_pressure_observation():
     return observation.model_dump(mode="json")
 
 
-
-# points d'entrée du script: 
+# Points d'entrée du script :
 
 # Ce bloc s'exécute uniquement si le fichier est lancé directement
 # Il permet de tester le générateur localement
 if __name__ == "__main__":
 
-    # Génération d'une observation
-    observation = generate_blood_pressure_observation()
+    # Exemple de test manuel (patient fixe + valeurs fixes)
+    obs = generate_blood_pressure_observation("PAT-001", 120, 80)
 
     # Affichage du résultat en JSON lisible
-    print(json.dumps(observation, indent=2))
+    print(json.dumps(obs, indent=2))
 
-#Pour plus de lisibilité:
-
-if __name__ == "__main__":
-
-    # Génération d'une observation
-    obs = generate_blood_pressure_observation()
-
-    # Affichage lisible dans le terminal
+    # Pour plus de lisibilité :
     print("Patient :", obs['subject']['reference'])
     print("Date :", obs['effectiveDateTime'])
     for comp in obs['component']:
@@ -201,4 +149,3 @@ if __name__ == "__main__":
         value = comp['valueQuantity']['value']
         unit = comp['valueQuantity']['unit']
         print(f"{code}: {value} {unit}")
-
