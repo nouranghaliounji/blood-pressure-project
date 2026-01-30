@@ -1,18 +1,18 @@
-# 🩺 Système de Surveillance de la Pression Artérielle  
+#  Système de Surveillance de la Pression Artérielle  
 ## Architecture temps réel avec Apache Kafka
 
 ---
 
-## 📌 Présentation du projet
+##  Présentation du projet
 
 Ce projet met en place un **système de surveillance de la pression artérielle en temps réel** basé sur **Apache Kafka**.  
 Il simule des données médicales, les analyse en continu, détecte les situations anormales et stocke les résultats pour visualisation.
 
-🎯 Objectif pédagogique : **illustrer une architecture de streaming de données** appliquée à un cas d’usage santé.
+ Objectif pédagogique : **illustrer une architecture de streaming de données** appliquée à un cas d’usage santé.
 
 ---
 
-## 🏗️ Architecture globale du système
+## Architecture globale du système
 
 Générateur FHIR → Kafka Producer → Topic Kafka → Kafka Consumer
 ↓
@@ -25,7 +25,7 @@ Kibana
 
 ---
 
-## 🧠 Technologies utilisées
+##  Technologies utilisées
 
 - **Python 3**
 - **Apache Kafka** (via Docker)
@@ -38,7 +38,7 @@ Kibana
 
 ---
 
-## 📁 Structure du projet
+## Structure du projet
 blood-pressure-project/
 │
 ├── producer/
@@ -63,7 +63,7 @@ blood-pressure-project/
 
 ---
 
-## 🧑‍🤝‍🧑 Répartition du travail
+##  Répartition du travail
 
 - **Personne 1 — Ingestion des données**
   - Génération des observations médicales (FHIR)
@@ -81,7 +81,7 @@ blood-pressure-project/
 
 ---
 
-## 🏥 Format des données médicales (FHIR)
+## Format des données médicales (FHIR)
 
 Chaque message Kafka contient une **Observation FHIR** avec :
 - Identifiant patient
@@ -96,7 +96,7 @@ Le format FHIR garantit :
 
 ---
 
-## 🩺 Analyse de la pression artérielle
+##  Analyse de la pression artérielle
 
 Les règles médicales implémentées sont basées sur les recommandations cliniques :
 
@@ -109,7 +109,7 @@ Les règles médicales implémentées sont basées sur les recommandations clini
 | Crise hypertensive | > 180 **OU** > 120 |
 | Hypotension | < 90 **OU** < 60 |
 
-➡️ Chaque mesure est **classifiée automatiquement**.
+--> Chaque mesure est **classifiée automatiquement**.
 
 
 
