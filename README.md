@@ -106,7 +106,7 @@ Les règles médicales implémentées sont basées sur les recommandations clini
 | Elevated | 120 ≤ Systolique ≤ 129 **ET** Diastolique < 80 |
 | Hypertension – Stade 1 | 130–139 **OU** 80–89 |
 | Hypertension – Stade 2 | ≥ 140 **OU** ≥ 90 |
-| Crise hypertensive | > 180 **OU** > 120 |
+| Crise hypertensive | >= 180 **OU** >= 120 |
 | Hypotension | < 90 **OU** < 60 |
 
 --> Chaque mesure est **classifiée automatiquement**.
@@ -165,7 +165,9 @@ Kibana permet :
 - le suivi des patients à risque
 - l’analyse de la répartition des anomalies
 - la visualisation temporelle
-- l’identification des situations critiques
+- l’identificationn des situations critiques
+
+![Uploading KIBANA DASHBOARD.jpeg…]()
 
 ## Infrastructure Docker
 Tous les services sont déployés via Docker :
