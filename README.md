@@ -65,17 +65,17 @@ blood-pressure-project/
 
 ##  Répartition du travail
 
-- **Personne 1 — Ingestion des données**
+- **Personne 1 — Ingestion des données** (Reina Baltagi) 
   - Génération des observations médicales (FHIR)
   - Kafka Producer
 
-- **Personne 2 — Analyse & Kafka Consumer**
+- **Personne 2 — Analyse & Kafka Consumer** (Nouran Ghaliounji) 
   - Extraction des données FHIR
   - Analyse de la pression artérielle
   - Classification des patients
   - Décision de stockage
 
-- **Personne 3 — Stockage & Visualisation**
+- **Personne 3 — Stockage & Visualisation** (Houda El Baidak) 
   - Indexation Elasticsearch
   - Dashboards Kibana
 
