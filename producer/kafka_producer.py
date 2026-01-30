@@ -4,7 +4,7 @@
 # 1) Génère des observations de pression artérielle au format FHIR
 # 2) Associe chaque observation à un patient fixe
 # 3) Sérialise les données en JSON
-# 4) Les envoie vers un topic Kafka toutes les 5 secondes
+# 4) Les envoie vers un topic Kafka toutes les 15 secondes
 
 # Les importations
 
@@ -48,9 +48,9 @@ PATIENT_IDS = [
 
 # Paramètres médicaux réalistes (bornes de sécurité)
 SYSTOLIC_MIN = 80
-SYSTOLIC_MAX = 180
+SYSTOLIC_MAX = 181
 DIASTOLIC_MIN = 50
-DIASTOLIC_MAX = 120
+DIASTOLIC_MAX = 121
 
 # Variation maximale par mesure (simulation d'une évolution progressive)
 # Dans la vraie vie, la tension varie généralement "doucement" (sauf cas extrême)
@@ -89,7 +89,7 @@ for pid in PATIENT_IDS:
 
 print("Kafka Producer démarré...")
 print(f"Envoi des messages vers le topic : {TOPIC_NAME}")
-print("Génération des mesures pour 5 patients fixes, toutes les 5 secondes.")
+print("Génération des mesures pour 5 patients fixes, toutes les 15 secondes.")
 
 while True:
     # Pour chaque patient, on génère une mesure à chaque cycle
@@ -123,5 +123,5 @@ while True:
         print(f"[{patient_id}] sys={new_sys} dia={new_dia} | t={observation['effectiveDateTime']}")
 
     # 8) Pause de 5 secondes avant la prochaine série de mesures
-    # Chaque patient aura donc une nouvelle mesure toutes les 5 secondes
+    # Chaque patient aura donc une nouvelle mesure toutes les 15 secondes
     time.sleep(15)

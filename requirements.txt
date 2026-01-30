@@ -1,5 +1,4 @@
 annotated-types==0.7.0
-Faker==40.1.0
 fhir.resources==8.1.0
 fhir_core==1.1.4
 pydantic==2.12.5

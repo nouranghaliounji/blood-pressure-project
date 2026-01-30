@@ -7,10 +7,9 @@ def analyze_blood_pressure(systolic, diastolic):
 
     if systolic is None or diastolic is None:
         return ["invalid_measurement"]
-
-
+    
     # Hypertensive crisis (urgence)
-    if systolic > 180 or diastolic > 120:
+    if systolic >= 180 or diastolic >= 120:
         return ["hypertensive_crisis"]
 
     # Hypertension Stage 2
@@ -24,7 +23,6 @@ def analyze_blood_pressure(systolic, diastolic):
     # Elevated blood pressure
     if 120 <= systolic <= 129 and diastolic < 80:
         return ["elevated"]
-
 
 def extract_bp_from_fhir_observation(observation: dict):
     """
