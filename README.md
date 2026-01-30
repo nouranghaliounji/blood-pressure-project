@@ -14,13 +14,8 @@ Il simule des données médicales, les analyse en continu, détecte les situatio
 
 ## Architecture globale du système
 
-Générateur FHIR → Kafka Producer → Topic Kafka → Kafka Consumer
-↓
-Analyse & Décision
-↓ ↓
-Stockage local (normal) Elasticsearch (anomalies)
-↓
-Kibana
+<img width="581" height="323" alt="Architecture" src="https://github.com/user-attachments/assets/eb0d85a3-ad80-47c4-81cc-7534e48eb333" />
+
 
 
 ---
