@@ -1,4 +1,7 @@
 import json
+from src.storage_handler import save_normal_observation, index_anomaly
+# On utilise ces fonctions pour gérer le stockage :
+# local pour les mesures normales, Elasticsearch pour les anomalies
 from kafka import KafkaConsumer
 
 from src.analyze_observation import (
@@ -7,7 +10,7 @@ from src.analyze_observation import (
 )
 
 BOOTSTRAP_SERVERS = "localhost:9092"
-TOPIC = "blood_pressure"   # si ça ne marche pas, on ajustera au topic réel du producer
+TOPIC = "blood_pressure_fhir"   # si ça ne marche pas, on ajustera au topic réel du producer
 GROUP_ID = "bp-consumer-group"
 
 
@@ -35,9 +38,11 @@ def main():
 
         if anomalies:
             print(f"🚨 ANOMALIE {anomalies} | patient={patient} | sys={systolic} dia={diastolic} | t={timestamp}")
+            index_anomaly(patient, systolic, diastolic, anomalies, timestamp)
         else:
             print(f"✅ NORMAL | patient={patient} | sys={systolic} dia={diastolic} | t={timestamp}")
-
+            save_normal_observation(observation)
+            
 
 if __name__ == "__main__":
     main()
