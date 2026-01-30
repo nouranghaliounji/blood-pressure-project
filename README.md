@@ -34,6 +34,7 @@ Il simule des données médicales, les analyse en continu, détecte les situatio
 ---
 
 ## Structure du projet
+```bash
 blood-pressure-project/
 │
 ├── producer/
@@ -43,7 +44,6 @@ blood-pressure-project/
 ├── src/
 │ ├── kafka_consumer.py # Kafka Consumer
 │ ├── analyze_observation.py # Analyse médicale
-│ └── storage_handler.py # Stockage & Elasticsearch
 │
 ├── data/
 │ └── normal/ # Données normales (JSON)
@@ -52,7 +52,7 @@ blood-pressure-project/
 ├── requirements.txt
 ├── .gitignore
 └── README.md
-
+```
 
 
 
