@@ -1,14 +1,15 @@
+# Kafka Producer
 
-# Kafka Producer 
-
-# le script suivant :
-# 1) Génère une observation de pression artérielle au format FHIR
-# 2) La sérialise en JSON
-# 3) L’envoie vers un topic Kafka
-
+# Le script suivant :
+# 1) Génère des observations de pression artérielle au format FHIR
+# 2) Associe chaque observation à un patient fixe
+# 3) Sérialise les données en JSON
+# 4) Les envoie vers un topic Kafka toutes les 5 secondes
 
 
-# Les importation
+
+# Les importations
+
 
 # KafkaProducer permet d'envoyer des messages à Kafka
 from kafka import KafkaProducer
@@ -23,7 +24,9 @@ import time
 from producer.fhir_generator import generate_blood_pressure_observation
 
 
+
 # Les paramètres configurables
+
 
 # Adresse du broker Kafka
 # 'localhost:9092' signifie :
@@ -35,7 +38,20 @@ KAFKA_BROKER = "localhost:9092"
 # Tous les messages seront envoyés dans ce topic
 TOPIC_NAME = "blood_pressure_fhir"
 
-# La création du producer
+# Liste de patients fixes
+# Ces patients représentent un petit groupe suivi en temps réel
+PATIENT_IDS = [
+    "PAT-001",
+    "PAT-002",
+    "PAT-003",
+    "PAT-004",
+    "PAT-005"
+]
+
+
+
+# Création du producer Kafka
+
 
 # KafkaProducer se charge de la connexion au broker Kafka
 # value_serializer transforme automatiquement nos données en JSON bytes
@@ -45,22 +61,32 @@ producer = KafkaProducer(
 )
 
 
+
 # Boucle principale
+
 
 print("Kafka Producer démarré...")
 print(f"Envoi des messages vers le topic : {TOPIC_NAME}")
+print("Génération des mesures pour 5 patients fixes, toutes les 5 secondes.")
 
 while True:
-    # 1) Générer une observation FHIR (dictionnaire Python)
-    observation = generate_blood_pressure_observation()
+    # Pour chaque patient, on génère une mesure à chaque cycle
+    for patient_id in PATIENT_IDS:
+        # 1) Générer une observation FHIR (dictionnaire Python)
+        observation = generate_blood_pressure_observation()
 
-    # 2) Envoyer l'observation vers Kafka
-    producer.send(TOPIC_NAME, observation)
+        # 2) Associer l'observation au patient courant
+        # On modifie uniquement la référence du patient
+        # La structure FHIR reste strictement identique
+        observation["subject"]["reference"] = f"Patient/{patient_id}"
 
-    # 3) Log lisible pour suivre l'exécution
-    print("Observation envoyée à Kafka :")
-    print(json.dumps(observation, indent=2))
+        # 3) Envoyer l'observation vers Kafka
+        producer.send(TOPIC_NAME, observation)
 
-    # 4) Pause de 5 secondes entre chaque message
-    # (évite de spammer Kafka)
+        # 4) Log lisible pour suivre l'exécution
+        print(f"Observation envoyée pour le patient {patient_id} :")
+        print(json.dumps(observation, indent=2))
+
+    # 5) Pause de 5 secondes avant la prochaine série de mesures
+    # Chaque patient aura donc une nouvelle mesure toutes les 5 secondes
     time.sleep(5)
